@@ -1,209 +1,59 @@
-# Lecture 11:
-Many real-world challenges can be addressed using Machine Learning techniques. Before building a model, it is important to frame the business or organizational problem as a machine learning task. This involves identifying the target variable, selecting relevant features, defining the unit of prediction, determining the prediction horizon, choosing appropriate evaluation metrics, and considering potential constraints and risks.
+# Lecture 10: 
+AQ1 – Descriptive Statistics for turns and rating_diff
 
-In this report, five real-world scenarios are analyzed and translated into machine learning problems. These scenarios include improving university graduation rates, reducing hospital readmissions, personalizing e-commerce homepages, predicting water pipe failures, and understanding student mental health outcomes. For each case, the problem is structured using a machine learning framework to demonstrate how data-driven solutions can support decision-making and improve outcomes.
-1. University wants to improve graduation rates
-Target Variable
+The dataset contains 20,058 chess games.
 
-Will the student graduate on time? (Yes / No)
+Turns
 
-Features
-GPA
-Attendance rate
-Assignment submission rate
-Credits completed
-Demographic and enrollment information
-Unit of Prediction
+The average game length is approximately 60.5 turns, with a median of 55 turns. The standard deviation is 33.6 turns, indicating substantial variation in game length. Half of all games contain between 37 and 79 turns. The shortest game lasted only 1 turn, while the longest reached 349 turns, suggesting the presence of some extreme values and a right-skewed distribution.
 
-One student
+Rating Difference
 
-Prediction Horizon
+The average rating difference between players is 7.8 points, while the median is 3 points, indicating that most games involve players with similar ratings. The standard deviation is 249 points, showing considerable variability across matches. The middle 50% of games have rating differences between −108 and 122 points. The minimum and maximum values (−1605 and 1499) reveal a small number of matches with very large rating gaps.
+AQ2 – Distribution Analysis of Chess Game Turns
 
-At the end of the first academic year (or each semester)
+The distribution of turns was examined using histograms, skewness, and the Shapiro–Wilk normality test.
 
-Success Metric
+The original distribution was positively skewed (skewness = 0.897), with a long right tail caused by a small number of exceptionally long games. A log transformation was applied to reduce this skewness.
 
-F1-score, Recall, or AUC-ROC
+After transformation, the distribution became more compact and visually closer to a bell shape. However, the skewness changed to −1.371, indicating that the transformation over-corrected the original right skew and introduced left skewness.
 
-Constraints & Risks
-Student privacy
-Bias against certain groups
-Missing at-risk students (false negatives)
-/////////////////////////////////////////////
-2. Hospital wants to reduce patient readmissions
-Target Variable
+The Shapiro–Wilk test produced extremely small p-values for both distributions (original: p = 2.25 × 10⁻³⁴, transformed: p = 5.00 × 10⁻⁴⁷), providing strong evidence against normality.
+AQ3 – WHO Correlation Analysis
 
-Will the patient be readmitted within 30 days? (Yes / No)
+A correlation matrix was computed using the numerical variables in the WHO Life Expectancy dataset.
 
-Features
-Age
-Diagnosis
-Length of stay
-Previous admissions
-Medications
-Lab results
-Unit of Prediction
+The three variables most positively correlated with life expectancy were:
 
-One patient discharge
+Schooling (r ≈ 0.75)
+Income composition of resources (r ≈ 0.72)
+BMI (r ≈ 0.57)
 
-Prediction Horizon
+These results suggest that countries with higher education levels, stronger economic resources, and better nutritional status tend to have higher life expectancy.
 
-At discharge time
+Confounder Discussion
 
-Success Metric
+A potential confounder is Income Composition of Resources. Wealthier countries generally provide better education, healthcare, sanitation, and nutrition. As a result, part of the observed relationship between schooling and life expectancy may actually be driven by overall economic development rather than education alone.
 
-Recall, Precision, AUC-ROC
+Therefore, correlation does not imply causation, and the observed associations should be interpreted carefully.
+AQ4 – Chi-Squared Test: Rating Group vs Winner
 
-Constraints & Risks
-Patient safety
-Cost of incorrect predictions
-Explainability requirements
-//////////////////////////////////////////////////////
-3. E-commerce company wants to personalize the homepage
-Target Variable
+A chi-squared test of independence was conducted to examine whether game outcomes are associated with player rating groups.
 
-Probability that a user clicks or purchases a recommended item
+The test produced a highly significant result (p = 1.29 × 10⁻⁷⁹), indicating that rating group and game outcome are not independent. Therefore, the distribution of winners differs across rating groups.
 
-Features
-Browsing history
-Purchase history
-Search queries
-Product ratings
-Session behavior
-Unit of Prediction
+To assess practical significance, Cramér's V was calculated and yielded a value of 0.098. This represents a very small effect size, suggesting that although the relationship is statistically significant, its practical strength is weak.
+AQ5 – Confidence Intervals for Rated vs Unrated Games
 
-One user-session
+A 95% bootstrap confidence interval was calculated for the mean number of turns in rated and unrated chess games.
 
-Prediction Horizon
+For rated games, the 95% confidence interval was [61.43, 62.50] turns. For unrated games, the 95% confidence interval was [53.20, 55.30] turns.
 
-Real-time when the homepage loads
+The intervals do not overlap, indicating a clear difference in average game length between the two groups. Rated games consistently last longer than unrated games by approximately 7–9 turns on average.
 
-Success Metric
+Conclusion
 
-CTR (Click-Through Rate), Conversion Rate
-
-Constraints & Risks
-Cold-start users
-Privacy concerns
-Recommendation diversity
-/////////////////////////////////////////////////
-4. City wants to predict water pipe failures in advance
-Target Variable
-
-Will a pipe fail within the next 6 months? (Yes / No)
-
-Features
-Pipe age
-Material type
-Diameter
-Pressure readings
-Maintenance history
-Soil conditions
-Unit of Prediction
-
-One water pipe
-
-Prediction Horizon
-
-3–6 months before failure
-
-Success Metric
-
-Recall, Precision, F1-score
-
-Constraints & Risks
-High repair costs
-Public service disruptions
-False alarms causing unnecessary maintenance
-///////////////////////////////////////////////
-5. Research team wants to understand student mental health outcomes
-Target Variable
-
-Mental health risk level (Low / Medium / High)
-
-Features
-Academic performance
-Attendance
-Sleep patterns
-Survey responses
-Social engagement
-Stress indicators
-Unit of Prediction
-
-One student
-
-Prediction Horizon
-
-At the end of each semester
-
-Success Metric
-
-Accuracy, F1-score
-
-Constraints & Risks
-Privacy and ethics
-Sensitive data handling
-Risk of misclassification affecting support decisions
--------------------------------------------------------
-Project Overview
-
-This project uses the UCI Adult Income dataset to predict whether a person's annual income exceeds $50,000 based on demographic and employment-related features.
-
-Dataset
-Dataset: Adult Income Dataset
-Source: UCI Machine Learning Repository - Adult Dataset
-Target Variable: income
-1 → income > 50K
-0 → income ≤ 50K
-Objective
-
-Build a machine learning pipeline to classify individuals into income categories and establish a baseline model for future improvements.
-
-Data Preprocessing
-1. Load and Inspect Data
-Loaded dataset using Pandas.
-Checked data types, shape, and missing values.
-2. Define Target Variable
-Converted income into a binary target.
-Removed fnlwgt because it is a census weight rather than a predictive feature.
-3. Train-Test Split
-Split data into 80% training and 20% testing.
-Used stratified sampling to preserve class distribution.
-4. Handle Missing Values
-Numerical features: Median imputation.
-Categorical features: Most frequent value imputation.
-5. Encode Categorical Variables
-Applied one-hot encoding using pd.get_dummies().
-Aligned train and test datasets to handle unseen categories.
-6. Feature Scaling
-Applied StandardScaler to numerical features.
-Fitted scaler only on training data to avoid data leakage.
-7. Baseline Model
-Used DummyClassifier(strategy="most_frequent").
-Baseline accuracy ≈ 76%.
-Features Used
-Age
-Workclass
-Education
-Education Number
-Marital Status
-Occupation
-Relationship
-Race
-Sex
-Capital Gain
-Capital Loss
-Hours per Week
-Native Country
-Evaluation Metric
-Accuracy
-Future models may also be evaluated using Precision, Recall, F1-score, and ROC-AUC.
-Technologies
-Python
-Pandas
-NumPy
-Scikit-learn
-Jupyter Notebook / VS Code
-Results
-
-The baseline model achieved approximately 76% accuracy, providing a benchmark for more advanced classification models such as Logistic Regression, Decision Trees, and Random Forests.
+- Most chess games in the dataset are moderately long, with a typical length of around 55–60 turns. Player ratings are generally balanced, although a few games involve opponents with substantially different skill levels.
+- The turns variable is not normally distributed. Although the log transformation changed the shape of the distribution, it did not achieve normality and may not be necessary for subsequent analyses.
+- There is a statistically significant association between rating group and game outcome (p < 0.001), but the effect size is very small (Cramér's V = 0.098). Rating group influences outcomes, though the magnitude of this influence is limited.
+- Rated chess games tend to be longer than unrated games, and the confidence intervals provide strong evidence that this difference is statistically meaningful and not due to random variation.
